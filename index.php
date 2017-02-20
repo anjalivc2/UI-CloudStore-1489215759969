@@ -16,12 +16,8 @@ if (substr( $applicationURI, 0, 3 ) === "ui-") {
 } else {
     $catalogHost = str_replace("-ui-", "-catalog-api-", $applicationURI);
 }
-error_log("catalogHost: ");
-error_log($catalogHost);
 //echo "\r\ncatalogHost:" . $catalogHost;    
 $catalogRoute = "http://" . $catalogHost;
-error_log("Catalog Route is ");
-error_log($CatalogRoute);
 // Get the products from our Catalog API
 $result = request("GET", $catalogRoute . "/items");
 ?>
