@@ -1,21 +1,22 @@
 <?php
 require_once("service-discovery.php");
 $data = file_get_contents('php://input');
-$services = getenv("VCAP_SERVICES");
-$services_json = json_decode($services, true);
 
 // Get the orders application url route from service discovery
 //$ordersRoute = getAPIRoute("Orders-API");
 
 $application = getenv("VCAP_APPLICATION");
 $application_json = json_decode($application, true);
-$applicationName = $application_json["name"];
-$ordersAppName = str_replace("ui-", "orders-api-", $applicationName);
-$ordersAppName = str_replace("-ui", "-orders-api", $ordersAppName);
 $applicationURI = $application_json["application_uris"][0];
-$ordersHost = substr_replace($applicationURI, $ordersAppName, 0, strlen($applicationName));
-$ordersRoute = "http://" . $ordersHost;
-$ordersURL = $ordersRoute . "/rest/orders";
+//echo "\r\napplicationURI:" . $applicationURI;
+if (substr( $applicationURI, 0, 3 ) === "ui-") {
+    $ordersRoute = "orders-api-" . substr($applicationURI, 3);
+} else {
+    $ordersRoute = str_replace("-ui-", "-orders-api-", $applicationURI);
+}
+
+$ordersHost = "http://" . $ordersRoute;
+$ordersURL = $ordersHost . "/rest/orders";
 
 //$ordersURL = $ordersRoute . "/rest/orders";
 //$ordersURL = "http://ms-ordersAPI-hyperfunctional-throstle.mybluemix.net/rest/orders";
